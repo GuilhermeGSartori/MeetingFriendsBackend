@@ -3,13 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace App.Services
 {
     public interface IUser
     {
-        User GetUser(int? Id);
+        Task<User> GetUser(int? Id);
         IQueryable<User> GetUsers { get; }
-        void Save(User user);
+        Task<TAR> Save(User user);
     }
 }

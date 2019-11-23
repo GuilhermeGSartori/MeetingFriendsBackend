@@ -12,7 +12,7 @@ namespace App.Data
 
         public string Date { get; set; }
 
-        public string Name { get; set; }
+        public string EventName { get; set; }
 
         public float Cost { get; set; }
 

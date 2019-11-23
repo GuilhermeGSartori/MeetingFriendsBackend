@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using App.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace App.Repo
 {
@@ -19,27 +20,58 @@ namespace App.Repo
 
         public IQueryable<Location> GetLocations => _db.Locations;
 
-        public Location GetLocation(string name)
+        public async Task<Location> GetLocation(string name)
         {
-            Location location = _db.Locations.Find(name);
+            Location location = new Location();
+
+            if (name != null)
+                location = await _db.Locations.FindAsync(name);
+
             return location;
         }
 
-        public void Save(Location location)
+        public async Task<LocationTAR> Save(Location location)
         {
-            Location existing_location = _db.Locations.Find(location.Name);
+            LocationTAR model = new LocationTAR();
+            Location existing_location = await GetLocation(location.LocationName);
 
             if (existing_location == null) //New
             {
-                _db.Locations.Add(location);
-                _db.SaveChanges();
+
+                try
+                {
+                    await _db.Locations.AddAsync(location); //does add deals with the Id?
+                    await _db.SaveChangesAsync();
+
+                    model.Name = location.LocationName;
+                    model.Success = true;
+                    model.Message = "New location created!";
+                }
+                catch (Exception ex)
+                {
+                    model.Success = false;
+                    model.Message = ex.ToString();
+                }
             }
             else
             {
+
                 existing_location.Score = location.Score;
 
-                _db.SaveChanges();
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    model.Name = location.LocationName;
+                    model.Success = true;
+                    model.Message = "Old location updated!";
+                }
+                catch (Exception ex)
+                {
+                    model.Success = false;
+                    model.Message = ex.ToString();
+                }
             }
+            return model;
         }
     }
 }

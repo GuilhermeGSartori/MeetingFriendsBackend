@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using App.Data;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace App.Repo
 {
@@ -18,30 +20,61 @@ namespace App.Repo
         }
         public IQueryable<User> GetUsers => _db.Users;
 
-        public User GetUser(int? Id)
+        public async Task<User> GetUser(int? Id)
         {
+            User user = new User();
             //need to implement non existence.
             //TCP skills? Tudo encapsulado com baixa agregação?
             //check Id and check user...
-            User user = _db.Users.Find(Id);
+            if (Id != null)
+                user = await _db.Users.FindAsync(Id);
+
             return user;
         }
         //Add/Update
-        public void Save(User user)
+        public async Task<TAR> Save(User user)
         {
-            if(user.UserId == 0) //New
+            TAR model = new TAR();
+
+            if (user.UserId == 0) //New
             {
-                _db.Users.Add(user); //does add deals with the Id?
-                _db.SaveChanges();
+                try
+                {
+                    await _db.Users.AddAsync(user); //does add deals with the Id?
+                    await _db.SaveChangesAsync();
+
+                    model.Id = user.UserId;
+                    model.Success = true;
+                    model.Message = "New user created!";
+                }
+                catch (Exception ex)
+                {
+                    model.Success = false;
+                    model.Message = ex.ToString();
+                }
             }
             else
             {
-                User existing_user = _db.Users.Find(user.UserId);
+                User existing_user = await GetUser(user.UserId);
                 existing_user.Name = user.Name;
                 existing_user.Email = user.Email;
 
-                _db.SaveChanges();
+                try
+                {
+                    //since Id cannot be null, if user does not exists
+                    //this will result in exception
+                    await _db.SaveChangesAsync();
+                    model.Id = user.UserId;
+                    model.Success = true;
+                    model.Message = "Old user updated!";
+                }
+                catch (Exception ex)
+                {
+                    model.Success = false;
+                    model.Message = ex.ToString();
+                }
             }
+            return model;
         }
     }
 }

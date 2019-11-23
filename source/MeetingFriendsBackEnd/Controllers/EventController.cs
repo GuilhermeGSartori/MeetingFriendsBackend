@@ -21,22 +21,31 @@ namespace MeetingFriendsBackEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] Event data)
+        public async Task<IActionResult> Save([FromBody] Event data)
         {
             if (data == null)
                 return BadRequest();
 
-            db.Save(data); //the one implemented in repo.
+            TAR result = await db.Save(data); //the one implemented in repo.
+            if (result == null) // almost impossible to happen, but it's necessary
+            {
+                return NotFound();
+            }
 
-            return Ok(data);
+            return Ok(result);
         }
 
         [HttpGet("(Id)")]
-        public IActionResult GetEvent(int? Id)
+        public async Task<IActionResult> GetEvent(int? Id)
         {
-            Event data = db.GetEvent(Id);
+            if (Id == null)
+                return BadRequest();
 
-            return Ok(data);
+            Event result = await db.GetEvent(Id);
+            if (result == null) //if for some reason the result does to returns...
+                return NotFound(); //this happens the Id is null...
+
+            return Ok(result);
         }
 
         [HttpGet]
