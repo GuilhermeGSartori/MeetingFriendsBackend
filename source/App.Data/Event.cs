@@ -8,11 +8,11 @@ namespace App.Data
     {
         public int EventId { get; set; }
 
-        public User Creator { get; set; }
+        public string Creator { get; set; }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         public float Cost { get; set; }
 

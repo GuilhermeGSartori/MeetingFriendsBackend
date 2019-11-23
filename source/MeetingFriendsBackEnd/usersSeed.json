@@ -1,11 +1,12 @@
 ﻿[
   {
-    "UserId": 1,
-    "Email": "guigsartori@hotmail.com",
-    "Name": "Guilherme Sartori"
+    //"UserId": 1, how does this incrementation works? who and where does this happens? by the variable name...
+    "Email": "guigsartori@gmail.com",
+    "Name": "Guilherme Sartori",
+    "Should not":  "Appear!"
   },
   {
-    "UserId": 2,
+    //"UserId": 2,
     "Email": "x@y.z",
     "Name": "Despacito 2"
   }
