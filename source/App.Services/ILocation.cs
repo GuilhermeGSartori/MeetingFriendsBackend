@@ -8,7 +8,7 @@ namespace App.Services
 {
     public interface ILocation
     {
-        Location GetLocation(int? Id);
+        Location GetLocation(string name);
         IQueryable<Location> GetLocations { get; }
         void Save(Location location);
     }

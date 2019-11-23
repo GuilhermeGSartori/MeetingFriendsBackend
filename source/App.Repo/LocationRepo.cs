@@ -19,23 +19,23 @@ namespace App.Repo
 
         public IQueryable<Location> GetLocations => _db.Locations;
 
-        public Location GetLocation(int? Id)
+        public Location GetLocation(string name)
         {
-            Location location = _db.Locations.Find(Id);
+            Location location = _db.Locations.Find(name);
             return location;
         }
 
         public void Save(Location location)
         {
-            if (location.LocationId == 0) //New
+            Location existing_location = _db.Locations.Find(location.Name);
+
+            if (existing_location == null) //New
             {
                 _db.Locations.Add(location);
                 _db.SaveChanges();
             }
             else
             {
-                Location existing_location = _db.Locations.Find(location.LocationId);
-                existing_location.Name = location.Name;
                 existing_location.Score = location.Score;
 
                 _db.SaveChanges();

@@ -31,7 +31,7 @@ namespace App.Repo
         {
             if(user.UserId == 0) //New
             {
-                _db.Users.Add(user);
+                _db.Users.Add(user); //does add deals with the Id?
                 _db.SaveChanges();
             }
             else
