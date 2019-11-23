@@ -7,7 +7,7 @@ using System.Text;
 
 namespace App.Repo
 {
-    class UserDbContext:DbContext
+    public class UserDbContext:DbContext
     {
         //constructor (creates connection with the entityframeworkcore (in-memory Db) 
         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
@@ -15,7 +15,7 @@ namespace App.Repo
         //code first, not db first
 
         //Generate for the User class the Users table
-        public DbSet<User> Users { get; set; }
+        public DbSet<User>Users { get; set; }
 
     }
 }

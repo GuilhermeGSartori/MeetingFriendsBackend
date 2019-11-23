@@ -11,6 +11,5 @@ namespace App.Services
         User GetUser(int? Id);
         IQueryable<User> GetUsers { get; }
         void Save(User user);
-
     }
 }
