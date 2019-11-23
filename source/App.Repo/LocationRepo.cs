@@ -17,16 +17,29 @@ namespace App.Repo
             _db = db;
         }
 
-        public IQueryable<Location> GetLocations => throw new NotImplementedException();
+        public IQueryable<Location> GetLocations => _db.Locations;
 
         public Location GetLocation(int? Id)
         {
-            throw new NotImplementedException();
+            Location location = _db.Locations.Find(Id);
+            return location;
         }
 
         public void Save(Location location)
         {
-            throw new NotImplementedException();
+            if (location.LocationId == 0) //New
+            {
+                _db.Locations.Add(location);
+                _db.SaveChanges();
+            }
+            else
+            {
+                Location existing_location = _db.Locations.Find(location.LocationId);
+                existing_location.Name = location.Name;
+                existing_location.Score = location.Score;
+
+                _db.SaveChanges();
+            }
         }
     }
 }
