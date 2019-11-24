@@ -12,10 +12,12 @@ namespace App.Repo
     {
 
         private readonly EventDbContext _db;
+        //private readonly LocationDbContext _l_db;
 
         public EventRepo(EventDbContext db)
         {
             _db = db;
+            //_l_db = l_db;
         }
 
         public IQueryable<Event> GetEvents => _db.Events;
@@ -33,11 +35,19 @@ namespace App.Repo
         public async Task<TAR> Save(Event newEvent)
         {
             TAR model = new TAR();
+            //EventTable instance = new EventTable();
 
             if (newEvent.EventId == 0) //New
             {
                 try
                 {
+                    if (newEvent.Place == null)
+                    {
+                        model.Success = false;
+                        model.Message = "Place data not present!";
+                        return model;
+                    }
+
                     await _db.Events.AddAsync(newEvent); //does add deals with the Id?
                     await _db.SaveChangesAsync();
 

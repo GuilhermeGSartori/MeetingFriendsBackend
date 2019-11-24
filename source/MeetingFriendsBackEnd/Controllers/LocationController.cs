@@ -24,7 +24,7 @@ namespace MeetingFriendsBackEnd.Controllers
         [HttpPost]
         public async Task<IActionResult> Save([FromBody] Location data)
         {
-            if (data == null)
+            if (data == null || data.LocationName == null)
                 return BadRequest();
 
             LocationTAR result = await db.Save(data); //the one implemented in repo.

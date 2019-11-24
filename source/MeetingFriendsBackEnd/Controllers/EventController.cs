@@ -14,10 +14,12 @@ namespace MeetingFriendsBackEnd.Controllers
     public class EventController : Controller
     {
         private readonly IEvent db;
+        //private readonly ILocation l_db;
 
-        public EventController(IEvent _db)
+        public EventController(IEvent _db/*, ILocation _l_db*/)
         {
             db = _db;
+            //l_db = _l_db;
         }
 
         [HttpPost]
@@ -26,13 +28,16 @@ namespace MeetingFriendsBackEnd.Controllers
             if (data == null)
                 return BadRequest();
 
-            TAR result = await db.Save(data); //the one implemented in repo.
-            if (result == null) // almost impossible to happen, but it's necessary
+            //LocationTAR resultLocation = await l_db.Save(data.Place);
+       
+            TAR resultEvent = await db.Save(data); //the one implemented in repo.
+            if (resultEvent == null) // almost impossible to happen, but it's necessary
             {
                 return NotFound();
             }
+            //resultEvent.EventName = resultLocation.Name;
 
-            return Ok(result);
+            return Ok(resultEvent);
         }
 
         [HttpGet("(Id)")]
@@ -42,6 +47,8 @@ namespace MeetingFriendsBackEnd.Controllers
                 return BadRequest();
 
             Event result = await db.GetEvent(Id);
+            //Location place = await l_db.GetLocation(result.Place.LocationName);
+            //result.Place = place;
             if (result == null) //if for some reason the result does to returns...
                 return NotFound(); //this happens the Id is null...
 

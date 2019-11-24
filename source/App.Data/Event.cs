@@ -18,6 +18,8 @@ namespace App.Data
 
         public string Description { get; set; }
 
-        public Location Place { get; set; }
+        public string Place { get; set; }
+
+        //public Location Place { get; set; }
     }
 }

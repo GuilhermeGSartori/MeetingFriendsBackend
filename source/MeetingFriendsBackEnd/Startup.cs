@@ -37,8 +37,8 @@ namespace MeetingFriendsBackEnd
             services.AddDbContext<EventDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
             services.AddTransient<IEvent, EventRepo>();
 
-            services.AddDbContext<LocationDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
-            services.AddTransient<ILocation, LocationRepo>();
+            //services.AddDbContext<LocationDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
+            //services.AddTransient<ILocation, LocationRepo>();
             // Add framework services.
             services.AddMvc();
         }
