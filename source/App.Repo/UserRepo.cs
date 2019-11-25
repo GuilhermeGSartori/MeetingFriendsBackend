@@ -76,5 +76,15 @@ namespace App.Repo
             }
             return model;
         }
+
+        public async Task<User> Login(int? Id)
+        {
+            User mainUser = new User();
+
+            mainUser = await GetUser(Id);
+
+            return mainUser;
+         
+        }
     }
 }

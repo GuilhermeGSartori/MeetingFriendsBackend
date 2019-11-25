@@ -28,7 +28,7 @@ namespace App.Repo
             List<User> users = JsonConvert.DeserializeObject<List<User>>(jsonData, settings);
             using (var serviceScope = _provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetService<UserDbContext>();
+                var context = serviceScope.ServiceProvider.GetService<UserDbContext>(); //mudar pra IUser lá em cima?
                 if (!context.Users.Any())
                 {
                     context.AddRange(users);

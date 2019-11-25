@@ -28,6 +28,7 @@ namespace App.Repo
 
             if (Id != null)
                 foundEvent = await _db.Events.FindAsync(Id);
+                //check if foundEvent is null or not...
 
             return foundEvent;
         }
