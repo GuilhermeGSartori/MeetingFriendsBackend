@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace App.Repo
 {
-    public class UserRepo : IUser //o que exatamente isso quer dizer? que depende da IUser? Herda dela?
+    public class UserRepo : IUser //using IUser interface (service)
     {
 
-        private readonly UserDbContext _db; //injeção de dependência
+        private readonly UserDbContext _db; 
 
-        public UserRepo(UserDbContext db) //If UserDbContext not public, this does not work!
+        public UserRepo(UserDbContext db) 
         {
             _db = db;
         }
@@ -23,14 +23,13 @@ namespace App.Repo
         public async Task<User> GetUser(int? Id)
         {
             User user = new User();
-            //need to implement non existence.
-            //TCP skills? Tudo encapsulado com baixa agregação?
-            //check Id and check user...
+
             if (Id != null)
                 user = await _db.Users.FindAsync(Id);
 
             return user;
         }
+
         //Add/Update
         public async Task<TAR> Save(User user)
         {
@@ -40,7 +39,7 @@ namespace App.Repo
             {
                 try
                 {
-                    await _db.Users.AddAsync(user); //does add deals with the Id?
+                    await _db.Users.AddAsync(user);
                     await _db.SaveChangesAsync();
 
                     model.Id = user.UserId;
@@ -61,8 +60,7 @@ namespace App.Repo
 
                 try
                 {
-                    //since Id cannot be null, if user does not exists
-                    //this will result in exception
+                    //if Id null this will return as an exception (since Id is the Key)
                     await _db.SaveChangesAsync();
                     model.Id = user.UserId;
                     model.Success = true;
@@ -77,14 +75,5 @@ namespace App.Repo
             return model;
         }
 
-        public async Task<User> Login(int? Id)
-        {
-            User mainUser = new User();
-
-            mainUser = await GetUser(Id);
-
-            return mainUser;
-         
-        }
     }
 }

@@ -8,16 +8,14 @@ using System.Threading.Tasks;
 
 namespace App.Repo
 {
-    public class EventRepo : IEvent
+    public class EventRepo : IEvent //using IEvent interface (service)
     {
 
         private readonly EventDbContext _db;
-        //private readonly LocationDbContext _l_db;
-
-        public EventRepo(EventDbContext db)
-        {
+                                            //dependency injection
+        public EventRepo(EventDbContext db) //If EventDbContext not public, this does not work!
+        {                                   //This repeats for the next repositories classes.
             _db = db;
-            //_l_db = l_db;
         }
 
         public IQueryable<Event> GetEvents => _db.Events;
@@ -28,7 +26,6 @@ namespace App.Repo
 
             if (Id != null)
                 foundEvent = await _db.Events.FindAsync(Id);
-                //check if foundEvent is null or not...
 
             return foundEvent;
         }
@@ -36,33 +33,32 @@ namespace App.Repo
         public async Task<TAR> Save(Event newEvent)
         {
             TAR model = new TAR();
-            //EventTable instance = new EventTable();
 
             if (newEvent.EventId == 0) //New
             {
                 try
                 {
-                    if (newEvent.Place == null)
+                    if (newEvent.Place == null)//Place is necessary
                     {
                         model.Success = false;
                         model.Message = "Place data not present!";
                         return model;
                     }
 
-                    await _db.Events.AddAsync(newEvent); //does add deals with the Id?
+                    await _db.Events.AddAsync(newEvent); //saves unique "Id" and increments the counter
                     await _db.SaveChangesAsync();
 
                     model.Id = newEvent.EventId;
                     model.Success = true;
                     model.Message = "New event created!";
                 }
-                catch (Exception ex)
+                catch (Exception ex)//Failed to save in db
                 {
                     model.Success = false;
                     model.Message = ex.ToString();
                 }
             }
-            else
+            else //Updating old event
             {
                 Event existing_event = await GetEvent(newEvent.EventId);
                 existing_event.Date = newEvent.Date;
@@ -78,7 +74,7 @@ namespace App.Repo
                     model.Success = true;
                     model.Message = "Old event updated!";
                 }
-                catch (Exception ex)
+                catch (Exception ex) // could not update db info
                 {
                     model.Success = false;
                     model.Message = ex.ToString();

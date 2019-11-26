@@ -28,8 +28,8 @@ namespace App.Repo
             List<User> users = JsonConvert.DeserializeObject<List<User>>(jsonData, settings);
             using (var serviceScope = _provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetService<UserDbContext>(); //mudar pra IUser lá em cima?
-                if (!context.Users.Any())
+                var context = serviceScope.ServiceProvider.GetService<UserDbContext>();
+                if (!context.Users.Any()) // Only Seed if the table is empty
                 {
                     context.AddRange(users);
                     context.SaveChanges();

@@ -12,6 +12,5 @@ namespace App.Services
         Task<User> GetUser(int? Id);
         IQueryable<User> GetUsers { get; }
         Task<TAR> Save(User user);
-        Task<User> Login(int? Id);
     }
 }

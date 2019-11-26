@@ -8,11 +8,11 @@ using System.Linq;
 
 namespace App.Repo
 {
-    public class LoginRepo : ILogin
+    public class LoginRepo : ILogin //using ILogin interface (service)
     {
-        private readonly LoginDbContext _db; //injeção de dependência
+        private readonly LoginDbContext _db; 
 
-        public LoginRepo(LoginDbContext db) //If UserDbContext not public, this does not work!
+        public LoginRepo(LoginDbContext db) 
         {
             _db = db;
         }
@@ -20,8 +20,8 @@ namespace App.Repo
         public async Task<User> GetLogin()
         {
             User mainUser = new User();
-            mainUser = await _db.Login.FindAsync(1);
-
+            mainUser = await _db.Login.FindAsync(1); //Since there is only one element in the table (if a user is logged)
+                                                     //this gets the logged user (the first and only User of the table)
             return mainUser;
         }
 
@@ -29,7 +29,7 @@ namespace App.Repo
         {
             TAR model = new TAR();
 
-            if (!_db.Login.Any())
+            if (!_db.Login.Any()) //To login a User, the Login Table must be empty (No one is logged)!
             {
                 try
                 {
@@ -40,13 +40,13 @@ namespace App.Repo
                     model.Success = true;
                     model.Message = "User logged!";
                 }
-                catch (Exception ex)
+                catch (Exception ex) // Could not save User info from users to login
                 {
                     model.Success = false;
                     model.Message = ex.ToString();
                 }
             }
-            else
+            else // There is a user already logged in!
             {
                 model.Success = false;
                 model.Message = "User already logged!";

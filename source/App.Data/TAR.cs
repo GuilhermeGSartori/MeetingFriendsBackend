@@ -10,7 +10,6 @@ namespace App.Data
     public class TAR//Table Applications Return
     {
         public int Id { get; set; }
-        public string EventName { get; set; }
         public bool Success { get; set; }
         public string Message { get; set; }
     }

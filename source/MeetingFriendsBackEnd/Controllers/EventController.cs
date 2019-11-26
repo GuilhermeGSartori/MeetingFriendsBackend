@@ -19,14 +19,12 @@ namespace MeetingFriendsBackEnd.Controllers
         private readonly IEvent db;
         private readonly ILogin login_db;
         private readonly IUser user_db;
-        //private readonly ILocation l_db;
 
-        public EventController(IEvent _db, ILogin _login_db, IUser _user_db/*, ILocation _l_db*/)
+        public EventController(IEvent _db, ILogin _login_db, IUser _user_db)
         {
             db = _db;
             login_db = _login_db;
             user_db = _user_db;
-            //l_db = _l_db;
         }
 
         [HttpPost]
@@ -39,15 +37,13 @@ namespace MeetingFriendsBackEnd.Controllers
             if (login == null)
                 return BadRequest();
 
-            //LocationTAR resultLocation = await l_db.Save(data.Place);
-
-            TAR resultEvent = await db.Save(data); //the one implemented in repo.
+            TAR resultEvent = await db.Save(data); //the one implemented in EventRepo
             if (resultEvent == null) // almost impossible to happen, but it's necessary
             {
                 return NotFound();
             }
-            //resultEvent.EventName = resultLocation.Name;
 
+            /* EMAIL SENDING SECTION -> NEXT RELEASE!
             MimeMessage message = new MimeMessage();
 
             MailboxAddress from = new MailboxAddress("Admin", login.Email);
@@ -84,7 +80,7 @@ namespace MeetingFriendsBackEnd.Controllers
                     //emailClient.Disconnect(true);
                     //}
                 }
-            }
+            }*/
 
             return Ok(resultEvent);
         }
@@ -96,10 +92,9 @@ namespace MeetingFriendsBackEnd.Controllers
                 return BadRequest();
 
             Event result = await db.GetEvent(Id);
-            //Location place = await l_db.GetLocation(result.Place.LocationName);
-            //result.Place = place;
-            if (result == null) //if for some reason the result does to returns...
-                return NotFound(); //this happens the Id is null...
+
+            if (result == null) //Event of "Id" not found!
+                return NotFound(); 
 
             return Ok(result);
         }

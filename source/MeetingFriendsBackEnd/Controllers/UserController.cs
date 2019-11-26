@@ -9,7 +9,7 @@ using App.Data;
 
 namespace MeetingFriendsBackEnd.Controllers
 {
-    [Produces("application/json")] //what does this means?
+    [Produces("application/json")] 
     [Route("api/User")]
     public class UserController : Controller
     {
@@ -26,8 +26,8 @@ namespace MeetingFriendsBackEnd.Controllers
             if (data == null)
                 return BadRequest();
 
-            TAR result = await db.Save(data); //the one implemented in repo.
-            if (result == null) // almost impossible to happen, but it's necessary
+            TAR result = await db.Save(data); 
+            if (result == null) 
             {
                 return NotFound();
             }
@@ -42,8 +42,8 @@ namespace MeetingFriendsBackEnd.Controllers
                 return BadRequest();
 
             User result = await db.GetUser(Id);
-            if (result == null) //if for some reason the result does to returns...
-                return NotFound(); //this happens the Id is null...
+            if (result == null) 
+                return NotFound(); 
 
             return Ok(result);
         }

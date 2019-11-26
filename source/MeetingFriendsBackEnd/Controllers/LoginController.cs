@@ -23,16 +23,28 @@ namespace MeetingFriendsBackEnd.Controllers
         }
 
         //GET api/Login
+        //Simulation(not real) of the process of log in a User (saving the "logged" user info in a logged user table)
         [HttpGet]
         public async Task<IActionResult> GetLogin()
         {
-            User data = await users_db.GetUser(1);
-            if (data == null)
-                return NotFound();
+            User logged = await login_db.GetLogin();
+            if (logged == null) // no one is logged in in the system
+            {
+                User data = await users_db.GetUser(1); //Since the scope of this project is limited, the first User
+                                                       //will always be selected to be an example of a logged user!
+                if (data == null)
+                    return NotFound();
 
-            TAR model = await login_db.Save(data);
+                TAR model = await login_db.Save(data);
 
-            return Ok(model);
+                if (model.Success == true)
+                    return Ok(data);
+
+                else
+                    return Ok(model);
+            }
+            else // a user is already logged!
+                return Ok(logged);
         }
     }
 }
