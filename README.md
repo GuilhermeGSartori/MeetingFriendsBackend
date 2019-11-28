@@ -4,7 +4,7 @@ ASP.NET Core Web API for the backend of the project made for Software Engeneerin
 **The scope of this API is:**  
 1) Create an InMemory code first database and server;
 2) Seed the database with Users using the "usersSeed.json" file as reference;
-3) Log-in of of this Users (hardcoded, select the one to be logged by it's Id);
+3) Log-in of one of the Users (hardcoded, select the one to be logged by it's Id);
 4) Create/Update events and store them in the database; 
 5) Email the system members about new Events;
 6) Enable for the frontend developer to use the APIs URL to get the necessary information from the backend (such as the data itself or feedbacks (using the TAR class));
