@@ -35,8 +35,13 @@ namespace MeetingFriendsBackEnd
             //install MailKit, JsonNet.PrivateSettersContractResolvers, Newtonsoft.Json, ...
 
             //Add services (interfaces) and db contexts (in memory, erased when server stops running)
-            services.AddDbContext<UserDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
-            services.AddTransient<IUser, UserRepo>();
+            services.AddDbContext<UserDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB")); //Every UserDbContext declaration refers to
+                                                                                               //Db set on the Context (same db, always)
+            services.AddTransient<IUser, UserRepo>(); //Adds dependency injection, the controller constructor only needs to say that
+                                                      //he recieves a IUser (that is implemented the Repo) and the injector will Contruct
+                                                      //the Repo class. With Transient, for every controller, is a different iteration
+                                                      //of the UserRepo class!
+                                                      //This is necessary to solve and determine the scope of dependencies!
 
             services.AddDbContext<EventDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
             services.AddTransient<IEvent, EventRepo>();
@@ -49,6 +54,7 @@ namespace MeetingFriendsBackEnd
             // Reads from the appsettigns json file the necessary data to configurate the email interface
             // Connects the read configurations with the EmailService class 
             services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            // With a Singleton, for every class that requires a IEmailConfiguration, it is the same object!
             services.AddTransient<IEmailService, EmailService>();
         }
 
