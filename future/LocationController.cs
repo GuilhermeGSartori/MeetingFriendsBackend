@@ -22,22 +22,33 @@ namespace MeetingFriendsBackEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] Location data)
+        public async Task<IActionResult> Save([FromBody] Location data)
         {
-            if (data == null)
+            if (data == null || data.LocationName == null)
                 return BadRequest();
 
-            db.Save(data); //the one implemented in repo.
+            LocationTAR result = await db.Save(data); //the one implemented in repo.
+            if (result == null) // almost impossible to happen, but it's necessary
+            {
+                return NotFound();
+            }
 
-            return Ok(data);
+            return Ok(result); ;
         }
 
-        [HttpGet("(name)")]
-        public IActionResult GetLocation(string name)
+        [HttpGet("(LocationName)")]
+        public async Task<IActionResult> GetLocation(string name)
         {
-            Location data = db.GetLocation(name);
+            if (name == null)
+                return BadRequest();
 
-            return Ok(data);
+            Location result = await db.GetLocation(name);
+
+            if (result == null) //if for some reason the result does to returns...
+                return NotFound(); //this happens the Id is null...
+
+            return Ok(result);
+
         }
 
         [HttpGet]

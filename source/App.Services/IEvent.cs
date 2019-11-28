@@ -3,13 +3,14 @@ using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace App.Services
 {
     public interface IEvent
     {
-        Event GetEvent(int? Id);
+        Task<Event> GetEvent(int? Id);
         IQueryable<Event> GetEvents { get; }
-        void Save(Event newEvent);
+        Task<TAR> Save(Event newEvent);
     }
 }

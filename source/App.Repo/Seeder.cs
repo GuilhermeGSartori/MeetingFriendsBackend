@@ -29,7 +29,7 @@ namespace App.Repo
             using (var serviceScope = _provider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<UserDbContext>();
-                if (!context.Users.Any())
+                if (!context.Users.Any()) // Only Seed if the table is empty
                 {
                     context.AddRange(users);
                     context.SaveChanges();

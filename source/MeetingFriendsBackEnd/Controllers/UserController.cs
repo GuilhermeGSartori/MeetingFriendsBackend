@@ -9,7 +9,7 @@ using App.Data;
 
 namespace MeetingFriendsBackEnd.Controllers
 {
-    [Produces("application/json")] //what does this means?
+    [Produces("application/json")] 
     [Route("api/User")]
     public class UserController : Controller
     {
@@ -21,22 +21,31 @@ namespace MeetingFriendsBackEnd.Controllers
         }
 
         [HttpPost]
-        public IActionResult Save([FromBody] User data)
+        public async Task<IActionResult> Save([FromBody] User data)
         {
             if (data == null)
                 return BadRequest();
 
-            db.Save(data); //the one implemented in repo.
+            TAR result = await db.Save(data); 
+            if (result == null) 
+            {
+                return NotFound();
+            }
 
-            return Ok(data);
+            return Ok(result);
         }
 
         [HttpGet("(Id)")]
-        public IActionResult GetUser(int? Id)
+        public async Task<IActionResult> GetUser(int? Id)
         {
-            User data = db.GetUser(Id);
+            if (Id == null)
+                return BadRequest();
 
-            return Ok(data);
+            User result = await db.GetUser(Id);
+            if (result == null) 
+                return NotFound(); 
+
+            return Ok(result);
         }
 
         [HttpGet]

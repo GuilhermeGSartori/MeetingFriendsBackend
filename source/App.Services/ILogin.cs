@@ -1,16 +1,14 @@
 ﻿using App.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Services
 {
-    public interface IUser
+    public interface ILogin
     {
-        Task<User> GetUser(int? Id);
-        IQueryable<User> GetUsers { get; }
+        Task<User> GetLogin();
         Task<TAR> Save(User user);
     }
 }

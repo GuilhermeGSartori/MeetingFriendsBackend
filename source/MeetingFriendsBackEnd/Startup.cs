@@ -31,16 +31,25 @@ namespace MeetingFriendsBackEnd
         public void ConfigureServices(IServiceCollection services)
         {
             //install microsoft.entityframeworkcore.InMemory 1.1
+            //necessary package to use in-memory SQL Server database. Version 1.1.1, installed using Visual Studio NuGet
+            //install MailKit, JsonNet.PrivateSettersContractResolvers, Newtonsoft.Json, ...
+
+            //Add services (interfaces) and db contexts (in memory, erased when server stops running)
             services.AddDbContext<UserDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
             services.AddTransient<IUser, UserRepo>();
 
             services.AddDbContext<EventDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
             services.AddTransient<IEvent, EventRepo>();
 
-            services.AddDbContext<LocationDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
-            services.AddTransient<ILocation, LocationRepo>();
+            services.AddDbContext<LoginDbContext>(opt => opt.UseInMemoryDatabase("FriendsDB"));
+            services.AddTransient<ILogin, LoginRepo>();
+
             // Add framework services.
             services.AddMvc();
+            // Reads from the appsettigns json file the necessary data to configurate the email interface
+            // Connects the read configurations with the EmailService class 
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +59,10 @@ namespace MeetingFriendsBackEnd
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+            //Temporary variable (closure, Configure Scope) used to get the json information of the db seed
             var dataText = System.IO.File.ReadAllText(@"usersSeed.json");
+            //Seed the users db with the original users
             Seeder seeder = new Seeder(app.ApplicationServices);
             seeder.SeedIt(dataText);
         }
