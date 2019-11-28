@@ -45,25 +45,27 @@ namespace MeetingFriendsBackEnd.Controllers
                 return NotFound();
             }
 
-            BodyBuilder bodyBuilder = new BodyBuilder() //Email Message to Invite for an event (HTML) 
+            if (resultEvent.Success == true && resultEvent.Message == "New event created!")
             {
-                HtmlBody = "<h1>Hello World!</h1>",
-                TextBody = "Hello World!"
-            };
-
-            foreach (User user in user_db.GetUsers)
-            {
-                if (user.UserId != login.UserId) //Send an email for everyone but the logged user!
+                BodyBuilder bodyBuilder = new BodyBuilder() //Email Message to Invite for an event (HTML) 
                 {
-                    EmailMessage email = new EmailMessage(user.Email)
+                    HtmlBody = "<h1>Novo Evento! - Meeting Friends</h1>",
+                    TextBody = "Olá! Um evento foi agendado e você foi convidado: " + data.Description + " de: " + data.Creator
+                };
+
+                foreach (User user in user_db.GetUsers)
+                {
+                    if (user.UserId != login.UserId) //Send an email for everyone but the logged user!
                     {
-                        Subject = "Convite para Evento: " + data.EventName,
-                        Content = bodyBuilder
-                    };
-                    mailer.Send(email);
+                        EmailMessage email = new EmailMessage(user.Email)
+                        {
+                            Subject = "Convite para Evento: " + data.EventName,
+                            Content = bodyBuilder
+                        };
+                        mailer.Send(email);
+                    }
                 }
             }
-
             return Ok(resultEvent);
         }
 
