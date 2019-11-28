@@ -19,12 +19,14 @@ namespace MeetingFriendsBackEnd.Controllers
         private readonly IEvent db;
         private readonly ILogin login_db;
         private readonly IUser user_db;
+        private readonly IEmailService mailer;
 
-        public EventController(IEvent _db, ILogin _login_db, IUser _user_db)
+        public EventController(IEvent _db, ILogin _login_db, IUser _user_db, IEmailService _mailer)
         {
             db = _db;
             login_db = _login_db;
             user_db = _user_db;
+            mailer = _mailer;
         }
 
         [HttpPost]
@@ -43,44 +45,24 @@ namespace MeetingFriendsBackEnd.Controllers
                 return NotFound();
             }
 
-            /* EMAIL SENDING SECTION -> NEXT RELEASE!
-            MimeMessage message = new MimeMessage();
-
-            MailboxAddress from = new MailboxAddress("Admin", login.Email);
-            message.From.Add(from);
-
-            BodyBuilder bodyBuilder = new BodyBuilder()
+            BodyBuilder bodyBuilder = new BodyBuilder() //Email Message to Invite for an event (HTML) 
             {
                 HtmlBody = "<h1>Hello World!</h1>",
                 TextBody = "Hello World!"
             };
-            message.Body = bodyBuilder.ToMessageBody();
 
             foreach (User user in user_db.GetUsers)
             {
-                if (user.UserId != login.UserId)
+                if (user.UserId != login.UserId) //Send an email for everyone but the logged user!
                 {
-                    MailboxAddress to = new MailboxAddress("User", user.Email);
-                    message.To.Add(to);
-
-                    message.Subject = "Convite para Evento: " + data.EventName;
-
-                    //using (var emailClient = new SmtpClient())
-                    //{
-                    //The last parameter here is to use SSL (Which you should!)
-                    //emailClient.Connect("smtp.gmail.com", 587, true);
-
-                    //Remove any OAuth functionality as we won't be using it. 
-                    //emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                    //emailClient.Authenticate(_emailConfiguration.SmtpUsername, _emailConfiguration.SmtpPassword);
-
-                    //emailClient.Send(message);
-
-                    //emailClient.Disconnect(true);
-                    //}
+                    EmailMessage email = new EmailMessage(user.Email)
+                    {
+                        Subject = "Convite para Evento: " + data.EventName,
+                        Content = bodyBuilder
+                    };
+                    mailer.Send(email);
                 }
-            }*/
+            }
 
             return Ok(resultEvent);
         }

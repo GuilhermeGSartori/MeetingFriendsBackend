@@ -46,6 +46,10 @@ namespace MeetingFriendsBackEnd
 
             // Add framework services.
             services.AddMvc();
+            // Reads from the appsettigns json file the necessary data to configurate the email interface
+            // Connects the read configurations with the EmailService class 
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>());
+            services.AddTransient<IEmailService, EmailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
